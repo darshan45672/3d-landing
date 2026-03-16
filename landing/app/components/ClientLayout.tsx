@@ -56,9 +56,9 @@ export default function ClientLayout({
           '<' // Start at the same time
         )
 
-        // Animate content elements after zoom
+        // Animate content elements after zoom (excluding buttons)
         tl.from(
-          contentRef.current.querySelectorAll('h1, p, button'),
+          contentRef.current.querySelectorAll('h1, p'),
           {
             y: 50,
             opacity: 0,

@@ -28,7 +28,9 @@ export default function ClickBlast() {
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div')
         const size = gsap.utils.random(3, 15)
-        const hue = gsap.utils.random(180, 280) // Blue to purple range
+        // Cosmic nebula colors: cyan (180), purple (270), magenta (300), orange (30)
+        const colorPalette = [180, 190, 270, 280, 290, 300, 320, 30, 40]
+        const hue = colorPalette[Math.floor(Math.random() * colorPalette.length)]
         const isCircle = Math.random() > 0.3
         
         particle.style.cssText = `
@@ -89,16 +91,22 @@ export default function ClickBlast() {
       for (let i = 0; i < 3; i++) {
         const ring = document.createElement('div')
         const delay = i * 0.1
+        // Nebula-inspired ring colors
+        const ringColors = [
+          'rgba(192, 132, 252, 0.9)', // purple
+          'rgba(34, 211, 238, 0.7)',  // cyan
+          'rgba(244, 114, 182, 0.6)'  // pink
+        ]
         ring.style.cssText = `
           position: absolute;
           width: 30px;
           height: 30px;
-          border: ${4 - i}px solid rgba(${147 + i * 30}, ${197 - i * 20}, 253, ${0.9 - i * 0.2});
+          border: ${4 - i}px solid ${ringColors[i]};
           border-radius: 50%;
           left: -15px;
           top: -15px;
           box-shadow: 
-            0 0 ${30 - i * 5}px rgba(147, 197, 253, ${0.8 - i * 0.2}),
+            0 0 ${30 - i * 5}px ${ringColors[i]},
             inset 0 0 ${20 - i * 5}px rgba(255, 255, 255, ${0.3 - i * 0.1});
         `
         blastContainer.appendChild(ring)
@@ -124,16 +132,16 @@ export default function ClickBlast() {
         height: 40px;
         background: radial-gradient(circle, 
           rgba(255, 255, 255, 1) 0%, 
-          rgba(200, 220, 255, 0.9) 20%,
-          rgba(147, 197, 253, 0.6) 50%, 
+          rgba(232, 121, 249, 0.9) 20%,
+          rgba(192, 132, 252, 0.6) 50%, 
           transparent 80%);
         border-radius: 50%;
         left: -20px;
         top: -20px;
         box-shadow: 
           0 0 50px rgba(255, 255, 255, 1),
-          0 0 100px rgba(147, 197, 253, 0.8),
-          0 0 150px rgba(96, 165, 250, 0.5);
+          0 0 100px rgba(232, 121, 249, 0.8),
+          0 0 150px rgba(192, 132, 252, 0.5);
         filter: blur(2px);
       `
       blastContainer.appendChild(flash)
@@ -159,11 +167,11 @@ export default function ClickBlast() {
           position: absolute;
           width: 2px;
           height: ${gsap.utils.random(15, 35)}px;
-          background: linear-gradient(to bottom, rgba(255,255,255,1), rgba(147,197,253,0.5), transparent);
+          background: linear-gradient(to bottom, rgba(255,255,255,1), rgba(34,211,238,0.5), transparent);
           left: 0;
           top: 0;
           border-radius: 2px;
-          box-shadow: 0 0 5px rgba(255,255,255,0.8);
+          box-shadow: 0 0 5px rgba(34,211,238,0.8);
         `
         blastContainer.appendChild(spark)
 

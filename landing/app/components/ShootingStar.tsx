@@ -91,17 +91,20 @@ export default function ShootingStar() {
     // Show cursor effect
     const handleMouseEnter = () => {
       document.body.style.cursor = 'none'
-      container.style.opacity = '1'
+      if (container) container.style.opacity = '1'
     }
 
     const handleMouseLeave = () => {
       document.body.style.cursor = 'auto'
-      container.style.opacity = '0'
+      if (container) container.style.opacity = '0'
     }
 
     window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseenter', handleMouseEnter)
+    document.addEventListener('mouseenter', handleMouseEnter)
     document.addEventListener('mouseleave', handleMouseLeave)
+    
+    // Keep visible when mouse re-enters
+    window.addEventListener('mouseenter', handleMouseEnter)
 
     // Initialize
     handleMouseEnter()
@@ -110,6 +113,7 @@ export default function ShootingStar() {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseenter', handleMouseEnter)
+      document.removeEventListener('mouseenter', handleMouseEnter)
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.body.style.cursor = 'auto'
       trails.forEach(trail => trail.remove())

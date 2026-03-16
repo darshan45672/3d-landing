@@ -1,0 +1,18 @@
+import Navbar from './components/Navbar'
+import AnimatedBackground from './components/AnimatedBackground'
+import HeroSection from './components/HeroSection'
+import ShootingStar from './components/ShootingStar'
+
+export default function Home() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-black font-sans relative">
+      {/* Animated Background */}
+      <AnimatedBackground />
+      
+      <Navbar />
+      <HeroSection />
+      <ShootingStar />
+    </div>
+  );
+}
+

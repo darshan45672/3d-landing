@@ -1,81 +1,51 @@
 'use client'
 
 import { useRef, useEffect } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 
-// Animated 3D Ring
-function AnimatedRing() {
-  const ringRef = useRef<THREE.Mesh>(null!)
-  
-  useFrame((state) => {
-    if (ringRef.current) {
-      ringRef.current.rotation.x = state.clock.getElapsedTime() * 0.3
-      ringRef.current.rotation.y = state.clock.getElapsedTime() * 0.2
-    }
-  })
-
-  return (
-    <mesh ref={ringRef}>
-      <torusGeometry args={[2, 0.5, 16, 100]} />
-      <meshStandardMaterial
-        color="#60a5fa"
-        metalness={0.8}
-        roughness={0.2}
-        emissive="#3b82f6"
-        emissiveIntensity={0.5}
-      />
-    </mesh>
-  )
-}
-
-// Floating Orbs
-function FloatingOrbs() {
-  const orbsRef = useRef<THREE.Group>(null!)
-  
-  useFrame((state) => {
-    if (orbsRef.current) {
-      orbsRef.current.rotation.y = state.clock.getElapsedTime() * 0.1
-      orbsRef.current.children.forEach((orb, i) => {
-        orb.position.y = Math.sin(state.clock.getElapsedTime() + i) * 0.5
-      })
-    }
-  })
-
-  const positions = [
-    [-3, 0, 0],
-    [3, 0, 0],
-    [0, 3, 0],
-    [0, -3, 0],
-  ]
-
-  return (
-    <group ref={orbsRef}>
-      {positions.map((pos, i) => (
-        <mesh key={i} position={pos as [number, number, number]}>
-          <sphereGeometry args={[0.3, 32, 32]} />
-          <meshStandardMaterial
-            color={i % 2 === 0 ? "#a78bfa" : "#22d3ee"}
-            metalness={0.9}
-            roughness={0.1}
-            emissive={i % 2 === 0 ? "#a78bfa" : "#22d3ee"}
-            emissiveIntensity={1}
-          />
-        </mesh>
-      ))}
-    </group>
-  )
-}
+// Tech skills data
+const skills = [
+  { name: 'React', icon: '⚛️' },
+  { name: 'Next.js', icon: '▲' },
+  { name: 'TypeScript', icon: '📘' },
+  { name: 'Node.js', icon: '🟢' },
+  { name: 'Python', icon: '🐍' },
+  { name: 'JavaScript', icon: '💛' },
+  { name: 'Three.js', icon: '🎮' },
+  { name: 'GSAP', icon: '🎯' },
+  { name: 'Tailwind CSS', icon: '🎨' },
+  { name: 'MongoDB', icon: '🍃' },
+  { name: 'PostgreSQL', icon: '🐘' },
+  { name: 'Docker', icon: '🐳' },
+  { name: 'Git', icon: '📦' },
+  { name: 'AWS', icon: '☁️' },
+]
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  const marqueeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
+
+    // Marquee animation
+    if (marqueeRef.current) {
+      const marquee = marqueeRef.current
+      const skillSetWidth = marquee.scrollWidth / 4
+
+      gsap.to(marquee, {
+        x: -skillSetWidth,
+        duration: 20,
+        ease: 'none',
+        repeat: -1,
+        modifiers: {
+          x: (x) => `${parseFloat(x) % skillSetWidth}px`,
+        },
+      })
+    }
   }, [])
 
   useGSAP(() => {
@@ -167,6 +137,34 @@ export default function AboutSection() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Skills Marquee */}
+        <div className="relative w-full overflow-hidden mt-16">
+          <div
+            ref={marqueeRef}
+            className="flex gap-8 w-fit"
+          >
+            {[...Array(4)].map((_, setIndex) =>
+              skills.map((skill, index) => (
+                <div
+                  key={`skill-${setIndex}-${index}`}
+                  className="flex-shrink-0 px-8 py-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-cyan-500/10 border border-purple-500/20 backdrop-blur-sm"
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <span className="text-6xl select-none">{skill.icon}</span>
+                    <span className="text-xl font-semibold text-white whitespace-nowrap select-none">
+                      {skill.name}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          
+          {/* Gradient overlays */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black/80 to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black/80 to-transparent pointer-events-none z-10" />
         </div>
       </div>
     </section>

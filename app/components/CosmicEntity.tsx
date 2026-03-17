@@ -204,7 +204,7 @@ function UFO() {
 
 export default function CosmicEntity() {
   return (
-    <div className="fixed bottom-8 right-8 w-[350px] h-[350px] pointer-events-none z-10">
+    <div className="absolute bottom-8 right-8 w-[350px] h-[350px] pointer-events-none z-10">
       <Canvas camera={{ position: [0, 2, 6], fov: 45 }} gl={{ alpha: true, antialias: true }} style={{ background: 'transparent' }}>
         <ambientLight intensity={0.3} />
         <spotLight 

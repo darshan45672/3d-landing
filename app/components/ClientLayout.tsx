@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import LoadingScreen from './LoadingScreen'
+import ShootingStar from './ShootingStar'
 
 export default function ClientLayout({
   children,
@@ -82,6 +83,9 @@ export default function ClientLayout({
 
   return (
     <div ref={containerRef} className="relative">
+      {/* Global Shooting Star Effect */}
+      <ShootingStar />
+      
       {/* Loading Screen */}
       <div
         ref={loadingRef}

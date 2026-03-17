@@ -178,49 +178,64 @@ export default function HeroSection() {
   useGSAP(() => {
     if (!containerRef.current || !contentRef.current) return
 
-    // Set initial state
+    // Clear any existing ScrollTriggers
+    ScrollTrigger.getAll().forEach(st => {
+      if (st.vars.trigger === containerRef.current) {
+        st.kill()
+      }
+    })
+
+    // Set initial state explicitly
     gsap.set(containerRef.current, { 
       opacity: 1, 
       scale: 1,
-      force3D: true, 
-      willChange: 'transform, opacity' 
+      clearProps: 'all'
     })
     gsap.set(contentRef.current, { 
       y: 0,
-      force3D: true, 
-      willChange: 'transform' 
+      clearProps: 'all'
     })
 
-    // Fade out hero section as you scroll - optimized
-    gsap.to(containerRef.current, {
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 0.5,
-        invalidateOnRefresh: true,
-      },
-      opacity: 0,
-      scale: 0.95,
-      ease: 'none',
-      force3D: true,
-    })
+    // Wait a frame before creating animations
+    requestAnimationFrame(() => {
+      if (!containerRef.current || !contentRef.current) return
 
-    // Parallax effect on content - smooth
-    gsap.to(contentRef.current, {
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 0.5,
-      },
-      y: -100,
-      ease: 'none',
-      force3D: true,
+      gsap.set(containerRef.current, { force3D: true, willChange: 'transform, opacity' })
+      gsap.set(contentRef.current, { force3D: true, willChange: 'transform' })
+
+      // Fade out hero section as you scroll
+      gsap.to(containerRef.current, {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+        },
+        opacity: 0,
+        scale: 0.95,
+        ease: 'none',
+        force3D: true,
+      })
+
+      // Parallax effect on content
+      gsap.to(contentRef.current, {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+        },
+        y: -100,
+        ease: 'none',
+        force3D: true,
+      })
     })
 
     return () => {
-      gsap.set([containerRef.current, contentRef.current], { willChange: 'auto' })
+      if (containerRef.current && contentRef.current) {
+        gsap.set([containerRef.current, contentRef.current], { willChange: 'auto', clearProps: 'all' })
+      }
     }
   }, [])
 
@@ -228,12 +243,14 @@ export default function HeroSection() {
     <section
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center"
+      style={{ opacity: 1, transform: 'scale(1)' }}
     >
       {/* 3D Background Canvas */}
       <div className="absolute inset-0 z-0">
         <Canvas
           camera={{ position: [0, 0, 8], fov: 60 }}
           style={{ background: 'transparent' }}
+          gl={{ antialias: true, alpha: true }}
         >
           <ambientLight intensity={0.3} />
           <pointLight position={[10, 10, 10]} intensity={1.2} color="#a78bfa" />
@@ -247,7 +264,11 @@ export default function HeroSection() {
       </div>
 
       {/* Hero Content */}
-      <div ref={contentRef} className="relative z-10 max-w-7xl mx-auto px-6 text-center py-16 mt-28">
+      <div 
+        ref={contentRef} 
+        className="relative z-10 max-w-7xl mx-auto px-6 text-center py-16 mt-28"
+        style={{ transform: 'translateY(0)' }}
+      >
         {/* Main Heading */}
         <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white mb-8 leading-none tracking-tight">
           <span className="block">Create</span>

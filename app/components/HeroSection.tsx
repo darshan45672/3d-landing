@@ -1,12 +1,9 @@
 'use client'
 
-import { useRef, useMemo, useEffect } from 'react'
+import { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import CosmicEntity from './CosmicEntity'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
 
 // Constellation Lines Component
 function ConstellationLines() {
@@ -168,82 +165,9 @@ function GeometricShapes() {
 }
 
 export default function HeroSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger)
-  }, [])
-
-  useGSAP(() => {
-    if (!containerRef.current || !contentRef.current) return
-
-    // Clear any existing ScrollTriggers
-    ScrollTrigger.getAll().forEach(st => {
-      if (st.vars.trigger === containerRef.current) {
-        st.kill()
-      }
-    })
-
-    // Set initial state explicitly
-    gsap.set(containerRef.current, { 
-      opacity: 1, 
-      scale: 1,
-      clearProps: 'all'
-    })
-    gsap.set(contentRef.current, { 
-      y: 0,
-      clearProps: 'all'
-    })
-
-    // Wait a frame before creating animations
-    requestAnimationFrame(() => {
-      if (!containerRef.current || !contentRef.current) return
-
-      gsap.set(containerRef.current, { force3D: true, willChange: 'transform, opacity' })
-      gsap.set(contentRef.current, { force3D: true, willChange: 'transform' })
-
-      // Fade out hero section as you scroll
-      gsap.to(containerRef.current, {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.5,
-          invalidateOnRefresh: true,
-        },
-        opacity: 0,
-        scale: 0.95,
-        ease: 'none',
-        force3D: true,
-      })
-
-      // Parallax effect on content
-      gsap.to(contentRef.current, {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.5,
-        },
-        y: -100,
-        ease: 'none',
-        force3D: true,
-      })
-    })
-
-    return () => {
-      if (containerRef.current && contentRef.current) {
-        gsap.set([containerRef.current, contentRef.current], { willChange: 'auto', clearProps: 'all' })
-      }
-    }
-  }, [])
-
   return (
     <section
-      ref={containerRef}
       className="relative min-h-screen flex items-center justify-center"
-      style={{ opacity: 1, transform: 'scale(1)' }}
     >
       {/* 3D Background Canvas */}
       <div className="absolute inset-0 z-0">
@@ -264,11 +188,7 @@ export default function HeroSection() {
       </div>
 
       {/* Hero Content */}
-      <div 
-        ref={contentRef} 
-        className="relative z-10 max-w-7xl mx-auto px-6 text-center py-16 mt-28"
-        style={{ transform: 'translateY(0)' }}
-      >
+      <div className="relative z-10 max-w-7xl mx-auto px-6 text-center py-16 mt-28">
         {/* Main Heading */}
         <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white mb-8 leading-none tracking-tight">
           <span className="block">Create</span>

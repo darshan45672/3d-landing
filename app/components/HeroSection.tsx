@@ -178,9 +178,18 @@ export default function HeroSection() {
   useGSAP(() => {
     if (!containerRef.current || !contentRef.current) return
 
-    // Enable GPU acceleration
-    gsap.set(containerRef.current, { force3D: true, willChange: 'transform, opacity' })
-    gsap.set(contentRef.current, { force3D: true, willChange: 'transform' })
+    // Set initial state
+    gsap.set(containerRef.current, { 
+      opacity: 1, 
+      scale: 1,
+      force3D: true, 
+      willChange: 'transform, opacity' 
+    })
+    gsap.set(contentRef.current, { 
+      y: 0,
+      force3D: true, 
+      willChange: 'transform' 
+    })
 
     // Fade out hero section as you scroll - optimized
     gsap.to(containerRef.current, {

@@ -4,6 +4,92 @@ import { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
+// Constellation Lines Component
+function ConstellationLines() {
+  const linesRef = useRef<THREE.LineSegments>(null!)
+  const particleCount = 30
+  const maxDistance = 3
+
+  const { positions, linePositions } = useMemo(() => {
+    const pos = new Float32Array(particleCount * 3)
+    const linePos: number[] = []
+    
+    // Generate random particle positions
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      pos[i] = (Math.random() - 0.5) * 12
+      pos[i + 1] = (Math.random() - 0.5) * 12
+      pos[i + 2] = (Math.random() - 0.5) * 8
+    }
+
+    // Create lines between nearby particles
+    for (let i = 0; i < particleCount; i++) {
+      for (let j = i + 1; j < particleCount; j++) {
+        const dx = pos[i * 3] - pos[j * 3]
+        const dy = pos[i * 3 + 1] - pos[j * 3 + 1]
+        const dz = pos[i * 3 + 2] - pos[j * 3 + 2]
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
+
+        if (distance < maxDistance) {
+          linePos.push(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2])
+          linePos.push(pos[j * 3], pos[j * 3 + 1], pos[j * 3 + 2])
+        }
+      }
+    }
+
+    return { positions: pos, linePositions: new Float32Array(linePos) }
+  }, [])
+
+  useFrame((state) => {
+    if (linesRef.current) {
+      linesRef.current.rotation.y = state.clock.getElapsedTime() * 0.03
+      linesRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.05) * 0.05
+    }
+  })
+
+  return (
+    <>
+      {/* Constellation Lines */}
+      <lineSegments ref={linesRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={linePositions.length / 3}
+            array={linePositions}
+            itemSize={3}
+            args={[linePositions, 3]}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color="#818cf8"
+          transparent
+          opacity={0.15}
+          linewidth={1}
+        />
+      </lineSegments>
+
+      {/* Glowing Nodes */}
+      <points>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={particleCount}
+            array={positions}
+            itemSize={3}
+            args={[positions, 3]}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.15}
+          color="#a78bfa"
+          transparent
+          opacity={0.8}
+          sizeAttenuation
+        />
+      </points>
+    </>
+  )
+}
+
 // Floating Particles Component
 function FloatingParticles() {
   const particlesRef = useRef<THREE.Points>(null!)
@@ -21,8 +107,8 @@ function FloatingParticles() {
 
   useFrame((state) => {
     if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.05
-      particlesRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.1) * 0.1
+      particlesRef.current.rotation.y = state.clock.getElapsedTime() * 0.05
+      particlesRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.1
     }
   })
 
@@ -54,8 +140,8 @@ function GeometricShapes() {
   
   useFrame((state) => {
     if (group.current) {
-      group.current.rotation.y = state.clock.elapsedTime * 0.2
-      group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1
+      group.current.rotation.y = state.clock.getElapsedTime() * 0.2
+      group.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.3) * 0.1
     }
   })
 
@@ -112,17 +198,19 @@ export default function HeroSection() {
           style={{ background: 'transparent' }}
         >
           <ambientLight intensity={0.3} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#a78bfa" />
-          <pointLight position={[-10, -10, -5]} intensity={0.5} color="#22d3ee" />
+          <pointLight position={[10, 10, 10]} intensity={1.2} color="#a78bfa" />
+          <pointLight position={[-10, -10, -5]} intensity={0.7} color="#22d3ee" />
+          <pointLight position={[0, -5, 3]} intensity={0.5} color="#f0abfc" />
           <directionalLight position={[0, 5, 5]} intensity={0.5} />
           
+          <ConstellationLines />
           <FloatingParticles />
           <GeometricShapes />
         </Canvas>
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 text-center py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 text-center py-16 mt-28">
         {/* Main Heading */}
         <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white mb-8 leading-none tracking-tight">
           <span className="block">Create</span>

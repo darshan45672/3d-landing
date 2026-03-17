@@ -71,7 +71,7 @@ export default function AnimatedBackground() {
         top: ${y}%;
         width: ${size}px;
         height: ${size}px;
-        background: radial-gradient(circle, rgba(192, 132, 252, 0.4) 0%, rgba(34, 211, 238, 0.2) 50%, transparent 70%);
+        background: radial-gradient(circle, rgba(192, 132, 252, 0.15) 0%, rgba(34, 211, 238, 0.08) 50%, transparent 70%);
         border-radius: 50%;
         pointer-events: none;
         filter: blur(60px);

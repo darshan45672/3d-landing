@@ -148,21 +148,30 @@ export default function Navbar() {
             {/* Animated Menu Button */}
             <button
               onClick={toggleMenu}
-              className="w-12 h-12 border-2 border-white rounded flex items-center justify-center hover:bg-white/10 transition-colors"
+              className="relative w-12 h-12 flex items-center justify-center group"
               aria-label="Menu"
             >
-              <div className="flex flex-col gap-1.5 w-6 h-6 items-center justify-center">
+              {/* Glowing border */}
+              <span className="absolute inset-0 rounded-xl border border-white/30 group-hover:border-indigo-400/70 transition-colors duration-300" />
+              <span className="absolute inset-0 rounded-xl bg-white/5 group-hover:bg-indigo-500/10 transition-colors duration-300" />
+              {/* Corner accents */}
+              <span className="absolute top-0.5 left-0.5 w-2 h-2 border-t border-l border-indigo-400/80 rounded-tl" />
+              <span className="absolute top-0.5 right-0.5 w-2 h-2 border-t border-r border-indigo-400/80 rounded-tr" />
+              <span className="absolute bottom-0.5 left-0.5 w-2 h-2 border-b border-l border-indigo-400/80 rounded-bl" />
+              <span className="absolute bottom-0.5 right-0.5 w-2 h-2 border-b border-r border-indigo-400/80 rounded-br" />
+              {/* Hamburger lines */}
+              <div className="relative flex flex-col gap-1.5 w-5 items-center justify-center">
                 <span
                   ref={line1Ref}
-                  className="w-6 h-0.5 bg-white block origin-center"
+                  className="w-5 h-0.5 bg-white block origin-center"
                 />
                 <span
                   ref={line2Ref}
-                  className="w-6 h-0.5 bg-white block"
+                  className="w-3.5 h-0.5 bg-indigo-300 block self-start"
                 />
                 <span
                   ref={line3Ref}
-                  className="w-6 h-0.5 bg-white block origin-center"
+                  className="w-5 h-0.5 bg-white block origin-center"
                 />
               </div>
             </button>

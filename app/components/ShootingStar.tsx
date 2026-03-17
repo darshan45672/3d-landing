@@ -55,7 +55,7 @@ export default function ShootingStar() {
         0 0 60px rgba(96,165,250,0.6),
         0 0 80px rgba(59,130,246,0.4);
       filter: blur(0.5px);
-      z-index: 1;
+      z-index: 10001;
     `
     container.appendChild(star)
 
@@ -128,10 +128,10 @@ export default function ShootingStar() {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
         pointerEvents: 'none',
-        zIndex: 9999,
+        zIndex: 10000,
         opacity: 0,
         transition: 'opacity 0.3s',
       }}
